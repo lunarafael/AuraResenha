@@ -1,0 +1,28 @@
+services:
+  db:
+    image: postgres:15
+    container_name: auraresenha_db
+    restart: always
+    environment:
+      POSTGRES_USER: aura
+      POSTGRES_PASSWORD: aura123
+      POSTGRES_DB: auraresenha
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    container_name: auraresenha_web
+    restart: always
+    depends_on:
+      - db
+    env_file: .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+
+volumes:
+  postgres_data:
