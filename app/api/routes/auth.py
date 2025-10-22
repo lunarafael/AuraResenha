@@ -9,19 +9,43 @@ from app.models.user import User
 
 router = APIRouter()
 
-@router.post("/register", response_model=schemas.user.UserOut)
+@router.post("/register", 
+             response_model=schemas.user.UserOut,
+             summary="Register a new user",
+             description="Create a new user account by providing a username, email, and password.",
+             response_description="The created user's public information."
+)
 def register(user_in: schemas.user.UserCreate, db: Session = Depends(get_db)):
+    """Register a new user.
+
+    This endpoint creates a new user in the database.
+    It returns the user's public data (excluding password).
+    """
     print(type(user_in.password), user_in.password)
     return auth_service.register_user(db, user_in)
 
-@router.post("/login")
+@router.post("/login",
+             summary="Login and get access token",
+             description="Authenticate a user using username and password. Returns a JWT access token.",
+             response_description="Access token for authenticated requests."
+)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    """Authenticate an existing user.
+
+    Returns a Bearer token that must be used in future requests to access protected routes.
+    """
     user = auth_service.authenticate_user(db, form_data.username, form_data.password)
     token = auth_service.create_user_token(user)
     return {"access_token": token, "token_type": "bearer"}
 
-@router.get("/me", response_model=schemas.user.UserOut)
+@router.get("/me",
+            response_model=schemas.user.UserOut,
+            summary="Get current authenticated user",
+            description="Return the currently authenticated user's information using their token.",
+            response_description="The authenticated user's public information."
+)
 def read_users_me(token: str, db: Session = Depends(get_db)):
+    """Get the current user based on a valid JWT token."""
     payload = decode_access_token(token)
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid token")
