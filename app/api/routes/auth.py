@@ -44,7 +44,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
             description="Return the currently authenticated user's information using their token.",
             response_description="The authenticated user's public information."
 )
-def read_users_me(token: str, db: Session = Depends(get_db)):
+def read_current_user(token: str, db: Session = Depends(get_db)):
     """Get the current user based on a valid JWT token."""
     payload = decode_access_token(token)
     if not payload:
