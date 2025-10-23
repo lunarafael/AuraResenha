@@ -11,5 +11,5 @@ class Comments(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     post_id = Column(Integer, ForeignKey("posts.id"))
 
-    #user = relationship("User", back_populates="comments")
-    #post = relationship("Post", back_populates="comments")
+    user = relationship("User", back_populates="comments")
+    post = relationship("Post", back_populates="comments")
