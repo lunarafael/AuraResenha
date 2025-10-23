@@ -9,8 +9,8 @@ class Vote(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     post_id = Column(Integer, ForeignKey("posts.id"))
 
-    aura = Column(Boolean, default=False)      # True = +aura, False = -aura
-    resenha = Column(Boolean, default=False)   # True = +resenha, False = -resenha
+    aura = Column(Boolean, default=False)
+    resenha = Column(Boolean, default=False)
 
-    #user = relationship("User", back_populates="votes")
-    #post = relationship("Post", back_populates="votes")
+    user = relationship("User", back_populates="votes")
+    post = relationship("Post", back_populates="votes")
