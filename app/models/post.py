@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 from app.models.base_class import Base
 
@@ -12,5 +13,8 @@ class Post(Base):
     author_id = Column(Integer, ForeignKey("users.id"))
 
     author = relationship("User", back_populates="posts")
-    comments = relationship("Comment", back_populates="post", cascade="all, delete-orphan")
+    comments = relationship("Comments", back_populates="post", cascade="all, delete-orphan")
     votes = relationship("Vote", back_populates="post", cascade="all, delete-orphan")
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
