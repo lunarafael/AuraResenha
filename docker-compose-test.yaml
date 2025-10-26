@@ -1,0 +1,28 @@
+services:
+  db_test:
+    image: postgres:15
+    container_name: auraresenha_db_test
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: auraresenha_test
+    networks:
+      - auraresenha_network
+
+  app_test:
+    build: .
+    container_name: auraresenha_app_test
+    depends_on:
+      - db_test
+    environment:
+      DATABASE_URL: postgresql://test_user:test_password@db_test:5432/auraresenha_test
+      PYTHONPATH: /app
+    working_dir: /app
+    networks:
+      - auraresenha_network
+    command: ["pytest", "-s", "--disable-warnings"]
+
+
+networks:
+  auraresenha_network:
+    driver: bridge
